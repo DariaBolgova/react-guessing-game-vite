@@ -1,47 +1,32 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Button from "./Button";
 
-class GuessControl extends Component {
-  constructor(props) {
-    super(props);
+function GuessControl({ onGuess }) {
+  // Create a state variable for the current guess with an empty string as the default value
+  const [currentGuess, setCurrentGuess] = useState("");
 
-    this.state = {
-      currentGuess: "",
-    };
+  // Update state when the input value changes
+  const handleInputChange = (event) => {
+    setCurrentGuess(event.target.value);
+  };
 
-    /**
-     * These lines are required to make the methods/functions declared on this
-     *  class have the correct `this` object when they run.
-     */
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.onSubmitGuess = this.onSubmitGuess.bind(this);
-  }
+  // When the button is clicked, call onGuess with the current guess converted to a number
+  // and then reset the input field
+  const onSubmitGuess = () => {
+    onGuess(Number(currentGuess));
+    setCurrentGuess("");
+  };
 
-  handleInputChange(event) {
-    this.setState({ currentGuess: event.target.value });
-  }
-
-  onSubmitGuess() {
-    // Since the values from an HTML input are strings by default,
-    //  convert to a number for the returned guess value
-    //  by passing in the string to the Number function.
-    // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number
-    this.props.onGuess(Number(this.state.currentGuess));
-    this.setState({ currentGuess: "" });
-  }
-
-  render() {
-    return (
-      <div>
-        <input
-          type="number"
-          value={this.state.currentGuess}
-          onChange={this.handleInputChange}
-        />
-        <Button onClick={this.onSubmitGuess}>Submit Guess</Button>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <input
+        type="number"
+        value={currentGuess}
+        onChange={handleInputChange}
+      />
+      <Button onClick={onSubmitGuess}>Submit Guess</Button>
+    </div>
+  );
 }
 
 export default GuessControl;
